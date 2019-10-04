@@ -119,9 +119,8 @@ public class Percolation {
     }
 
     public void printMatrix() {
-        int N = this.matrix.length;
-        for (int i = 0 ; i < N ; i++) {
-            for (int j = 0 ; j < N ; j++) {
+        for (int i = 0 ; i < size ; i++) {
+            for (int j = 0 ; j < size ; j++) {
                 if (this.matrix[i][j] == 1) {
                     System.out.print((char)27 + "[32m" + this.matrix[i][j] + " ");
                 } else {
