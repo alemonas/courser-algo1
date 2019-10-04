@@ -1,6 +1,3 @@
-import java.lang.reflect.Array;
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 /******************************************************************************
@@ -21,41 +18,39 @@ public class Percolation {
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-        if ( n <= 0) {
-            throw new IllegalArgumentException();
-        }
         size = n;
         matrix = new int[n][n];
         countOpenSites = 0;
-        quSize = n*n+2;
-        quickUnionUF = new WeightedQuickUnionUF(quSize);
+        quSize = n*n;
+        quickUnionUF = new WeightedQuickUnionUF(quSize+2);
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                matrix[i][j] = 0;
-            }
-        }
-
-        System.out.println(matrix);
+//        for (int i = 0; i < n; i++) {
+//            for (int j = 0; j < n; j++) {
+//                matrix[i][j] = 0;
+//            }
+//        }
+//
+//        System.out.println(matrix);
     }
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
         if (!isOpen(row, col)) {
             countOpenSites++;
-            matrix[row][col] = 1;
-            unionWithAdjacents(row, col);
+//            matrix[row][col] = 1;
+            unionWithAdjacent(row, col);
         }
     }
 
     // Return the related index in a flat array
     // used by the Weighted Quick Union
     private int getIndexFromMatrixToArray(int row, int col) {
-        return (row * size) + (col + 1);
+//        return (row * size) + (col + 1);
+        return ((row*quSize - quSize) + col) - 1;
     }
 
     //
-    private void unionWithAdjacents(int row, int col) {
+    private void unionWithAdjacent(int row, int col) {
         int topX = row - 1;
         int bottomX = row + 1;
         int leftY = col - 1;
@@ -97,9 +92,21 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
+//        row--;
+//        col--;
+        checkBounds(row, col);
         if (matrix[row][col] == 1)
             return true;
         return false;
+    }
+
+    private void checkBounds(int i, int j) {
+        if (i <= 0 || i > quSize) {
+            throw new java.lang.IllegalArgumentException("row index i out of bounds");
+        }
+        if (j <= 0 || j > quSize) {
+            throw new java.lang.IllegalArgumentException("row index i out of bounds");
+        }
     }
 
     // is the site (row, col) full?
@@ -118,30 +125,30 @@ public class Percolation {
         return quickUnionUF.connected(0, (quSize - 1));
     }
 
-    public void printMatrix() {
-        for (int i = 0 ; i < size ; i++) {
-            for (int j = 0 ; j < size ; j++) {
-                if (this.matrix[i][j] == 1) {
-                    System.out.print((char)27 + "[32m" + this.matrix[i][j] + " ");
-                } else {
-                    System.out.print((char)27 + "[37m" + this.matrix[i][j] + " ");
-                }
-            }
-            System.out.println("");
-        }
-        System.out.println("-");
-    }
+//    public void printMatrix() {
+//        for (int i = 0 ; i < size ; i++) {
+//            for (int j = 0 ; j < size ; j++) {
+//                if (this.matrix[i][j] == 1) {
+//                    System.out.print((char)27 + "[32m" + this.matrix[i][j] + " ");
+//                } else {
+//                    System.out.print((char)27 + "[37m" + this.matrix[i][j] + " ");
+//                }
+//            }
+//            System.out.println("");
+//        }
+//        System.out.println("-");
+//    }
 
     // test client (optional)
     public static void main(String[] args) {
-        Percolation percolation = new Percolation(4);
-        percolation.open(0, 0);
-        percolation.open(0, 1);
+        Percolation percolation = new Percolation(3);
         percolation.open(1, 1);
-        percolation.open(2, 0);
-        boolean full = percolation.isFull(2,0);
-        System.out.println(full);
-        percolation.printMatrix();
+        percolation.open(1, 2);
+        percolation.open(2, 1);
+        percolation.open(3, 1);
+//        boolean full = percolation.isFull(2,0);
+//        System.out.println(full);
+//        percolation.printMatrix();
         boolean isPercolate = percolation.percolates();
 
         System.out.println(isPercolate);
