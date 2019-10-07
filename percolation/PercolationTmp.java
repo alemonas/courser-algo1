@@ -81,10 +81,10 @@ public class PercolationTmp {
 
     public static void main(String[] args) {
         Percolation perc = new Percolation(3);
-        perc.open(1, 2);
-        perc.open(2, 2);
-        perc.open(2, 3);
-        perc.open(3, 3);
+        perc.open(1, 1);
+        perc.open(2, 1);
+        perc.open(3, 1);
+//        perc.open(3, 3);
         boolean c = perc.isFull(1, 1);
         //boolean c1 = perc.uf.connected(perc.ijTo1D(1, 1), perc.ijTo1D(2, 1));
         //boolean c2 = perc.percolates();
