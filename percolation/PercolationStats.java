@@ -31,6 +31,13 @@ public class PercolationStats {
 
     // test client (see below)
     public static void main(String[] args) {
+        Integer n = Integer.parseInt(args[0]);
+        Integer T = Integer.parseInt(args[1]);
+//        for (String s: args) {
+//            System.out.println(s);
+//        }
+        System.out.println(n);
+        System.out.println(T);
         System.out.println("Percolation stats");
     }
 

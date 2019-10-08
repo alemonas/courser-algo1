@@ -25,13 +25,6 @@ public class Percolation {
         quSize = n*n;
         quickUnionUF = new WeightedQuickUnionUF(quSize+2);
         openSites = new int[quSize+2];
-//        for (int i = 0; i < n; i++) {
-//            for (int j = 0; j < n; j++) {
-//                matrix[i][j] = 0;
-//            }
-//        }
-//
-//        System.out.println(matrix);
     }
 
     // opens the site (row, col) if it is not open already
@@ -48,73 +41,41 @@ public class Percolation {
     // used by the Weighted Quick Union
     private int getIndexFromMatrixToArray(int row, int col) {
         return ((row - 1) * size) + col;
-//        return (row * size) + (col + 1);
-//        return ((row*quSize - quSize) + col) - 1;
     }
 
-    //
     private void unionWithAdjacent(int i, int j) {
-        int topX = i - 1;
-        int bottomX = i + 1;
+        int top = i - 1;
+        int bottom = i + 1;
+        int left = j - 1;
+        int right = j + 1;
 
         int index = getIndexFromMatrixToArray(i, j);
 
-
-        if ( topX <= 0 ) {
+        if ( top <= 0 ) {
             quickUnionUF.union(0, index);
         }
 
-        if ( bottomX > size ) {
+        if ( bottom > size ) {
             quickUnionUF.union((quSize+1), index);
         }
-//        if (j < size) attemptUnion(i, j+1, index);
-//        if (j > 1) attemptUnion(i, j-1, index);
-//
-//        if (i < size) {
-//            attemptUnion(i+1, j, index);
-//        } else {
-//            quickUnionUF.union(index, size+1);
-//        }
-//        if (i > 1) {
-//            attemptUnion(i-1, j, index);
-//        } else {
-//            quickUnionUF.union(index, size);
-//        }
-//        int topX = row - 1;
-//        int bottomX = row + 1;
-//        int leftY = col - 1;
-//        int rightY = col + 1;
-//
-//        int index = getIndexFromMatrixToArray(row, col);
-//
-//        if ( topX <= 0 ) {
-//            quickUnionUF.union(0, index);
-//        } else {
-//            if (isOpen(topX, col)) {
-//                int topIndex = getIndexFromMatrixToArray(topX, col);
-//                quickUnionUF.union(index, topIndex);
-//            }
-//
-//            if (isOpen(row, leftY)) {
-//                int leftIndex = getIndexFromMatrixToArray(row, leftY);
-//                quickUnionUF.union(index, leftIndex);
-//            }
-//
-//            if (isOpen(row, rightY)) {
-//                int rightIndex = getIndexFromMatrixToArray(row, rightY);
-//                quickUnionUF.union(index, rightIndex);
-//            }
-//
-//        }
-//
-//        if ( bottomX > size) {
-//            quickUnionUF.union((quSize + 1), index);
-//        } else {
-//            if (isOpen(bottomX, col)) {
-//                int bottomIndex = getIndexFromMatrixToArray(bottomX, col);
-//                quickUnionUF.union(index, bottomIndex);
-//            }
-//        }
+
+        if (top > 0 && bottom <= size) {
+            attemptUnion(top, j, index);
+            attemptUnion(bottom, j, index);
+        }
+
+        if (top > 0 && bottom <= (size + 1)) {
+            attemptUnion(top, j, index);
+        }
+
+        if (left > 0 && right <= size) {
+            attemptUnion(i, right, index);
+        }
+
+        if (left > 0 && right <= (size+1)) {
+            attemptUnion(i, left, index);
+
+        }
     }
 
     private void attemptUnion(int i, int j, int index) {
@@ -125,8 +86,6 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-//        row--;
-//        col--;
         checkBounds(row, col);
         int index = getIndexFromMatrixToArray(row, col);
         return openSites[index] == 1;
@@ -154,35 +113,21 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-//        return quickUnionUF.connected(size, size+1);
         return quickUnionUF.connected(0, (quSize + 1));
     }
-
-//    public void printMatrix() {
-//        for (int i = 0 ; i < size ; i++) {
-//            for (int j = 0 ; j < size ; j++) {
-//                if (this.matrix[i][j] == 1) {
-//                    System.out.print((char)27 + "[32m" + this.matrix[i][j] + " ");
-//                } else {
-//                    System.out.print((char)27 + "[37m" + this.matrix[i][j] + " ");
-//                }
-//            }
-//            System.out.println("");
-//        }
-//        System.out.println("-");
-//    }
 
     // test client (optional)
     public static void main(String[] args) {
         Percolation percolation = new Percolation(3);
         percolation.open(1, 1);
+        percolation.open(1, 2);
+        percolation.open(1, 3);
         percolation.open(2, 1);
         percolation.open(2, 2);
+        percolation.open(2, 3);
         percolation.open(3, 1);
+        percolation.open(3, 2);
         percolation.open(3, 3);
-//        boolean full = percolation.isFull(2,0);
-//        System.out.println(full);
-//        percolation.printMatrix();
         boolean isPercolate = percolation.percolates();
 
         System.out.println(isPercolate);
